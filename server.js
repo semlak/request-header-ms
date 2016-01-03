@@ -1,33 +1,23 @@
 'use strict';
 
 var express = require('express');
-var routes = require('./app/routes/index.js');
-var mongoose = require('mongoose');
-var passport = require('passport');
-var session = require('express-session');
-
 var app = express();
-require('dotenv').load();
-require('./app/config/passport')(passport);
-
-mongoose.connect(process.env.MONGO_URI);
-
-app.use('/controllers', express.static(process.cwd() + '/app/controllers'));
-app.use('/public', express.static(process.cwd() + '/public'));
-app.use('/common', express.static(process.cwd() + '/app/common'));
-
-app.use(session({
-	secret: 'secretClementine',
-	resave: false,
-	saveUninitialized: true
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-routes(app, passport);
-
 var port = process.env.PORT || 8080;
+
+app.get('/whoami', function(req, res) {
+	// console.log(req.headers);
+	var myRegex = /(.*?),/
+	//for language and os fields, try to use regular expression to filter out stuff I don't want.
+	//but if regex fails, use whole string
+	var returnObj = {
+		'ipaddress' : req.headers.host,
+		'language'  : (/(.*?),/.exec(req.headers['accept-language'])[1] || req.headers['accept-language']),
+		'os'		: (/\((.*?)\)/.exec(req.headers['user-agent'])[1] || req.headers['user-agent'])
+	};
+	res.send(JSON.stringify(returnObj, false, ' '));
+	res.end();
+});
+
 app.listen(port,  function () {
 	console.log('Node.js listening on port ' + port + '...');
 });
