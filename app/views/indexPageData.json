@@ -1,0 +1,13 @@
+{
+	"title" : "API Basejump: A Request Header Parsing microservice",
+	"userStories" : [
+		"I can get the IP address, language, and operating system for my browser." 	
+	],
+	"examples" : [
+		{
+			"input" : "APPURL/whoami", 
+			"action" : "Returns:", 
+			"output" : "{ \"ipaddress\": \"localhost:8080\", \"language\": \"en-US\", \"os\": \"X11; Linux x86_64\" }"
+		}
+	]
+}
